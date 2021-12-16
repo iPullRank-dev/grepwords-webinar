@@ -63,7 +63,88 @@ app.get("/keyword", async function (req, res) {
     res.status(403).send({ status: "failed" });
   }
 });
+app.post("/slack/sv", async function (req, res) {
+  try {
+    let slackPayload = req.body;
+    let query = slackPayload.text;
+    await axios
+      .post(
+        "https://data.grepwords.com/v1/keywords/lookup",
+        {
+          term: query,
+        },
+        {
+          headers: {
+            contentType: "application/json",
+            api_key: process.env.APIKEY,
+          },
+        }
+      )
+      .then(async (resp) => {
+        let payload = [];
+        let fields = [];
+        if (resp.data) {
+          if (resp.data && resp.data.data.history) {
+            payload = resp.data.data.history.reverse();
+            // override
+            payload = payload
+              .map((h) => {
+                if (h.volume && h.date.split("-")[1] == "2021") {
+                  return h;
+                } else {
+                  return "";
+                }
+              })
+              .filter((e) => e);
 
+            // add search volume and cpc to response
+            fields.push(
+              {
+                type: "plain_text",
+                text: "Keyword",
+              },
+              {
+                type: "mrkdwn",
+                text: resp.data.data.keyword.toString() || "",
+              },
+              {
+                type: "plain_text",
+                text: "Search Volume",
+              },
+              {
+                type: "mrkdwn",
+                text: resp.data.data.volume.toString() || "",
+              },
+              {
+                type: "plain_text",
+                text: "CPC",
+              },
+              {
+                type: "mrkdwn",
+                text: resp.data.data.cpc.toString() || "",
+              }
+            );
+          }
+          // provide slack payload back to them to make it pretty
+          let override = {
+            blocks: [
+              {
+                type: "section",
+                fields: fields,
+              },
+            ],
+          };
+          res.status(200).send(override);
+        } else {
+          // nothing found return empty
+          res.status(200).send(payload);
+        }
+      });
+  } catch (e) {
+    console.log("e", e);
+    res.status(403).send({ status: "failed" });
+  }
+});
 app.get("/*", cacheMiddleware());
 app.options("/*", cacheMiddleware());
 
