@@ -7,7 +7,7 @@
 
 function search_volume(q) {
   // @CHANGEME - CHANGE BASEURL TO YOUR ENDPOINT
-  const BASEURL = "https://ipr-proxy.herokuapp.com";
+  const BASEURL = "https://XXXX.herokuapp.com";
 
   var url = BASEURL + "/keyword?q=" + encodeURIComponent(q);
   var response = UrlFetchApp.fetch(url);
