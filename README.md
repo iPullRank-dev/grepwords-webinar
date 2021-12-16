@@ -63,6 +63,8 @@ Be sure to replace the APIKEY with your grepwords API key as well as adjust the 
 The proxy script has an endpoint ```/slack/sv```.
 Create an [app](https://api.slack.com/apps?new_app=1) from app manifest. Then add a slash command for */sv*. You need to update the endpoint that is on the proxy and add the app to your workspace.
 
+![](slack/slack-preview.png)
+
 
 ## Questions
 
