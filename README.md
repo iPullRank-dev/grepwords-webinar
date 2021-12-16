@@ -37,6 +37,23 @@ Details in deploying to Heroku can be found [here](https://devcenter.heroku.com/
 Be sure to change the BASEURL in the appscript.js file before you copy/paste into the Google Sheets App Script Editor. The example I show in the webinar is using a test one
  ```https://XXXX.herokuapp.com```
 
+For the demo showcasing the sparkline, you need 3 ceils and work your way left to right
+
+```
+keyword1
+=SPARKLINE(A3:A13,{"charttype","column";"highcolor","red"})
+=search_volume(A1)
+```
+As a column it's
+
+```
+keyword
+sparkline
+list search volume and dates
+```
+![](appscript/appscript-preview.png)
+
+
 ## Bookmarklet
 Be sure to replace the APIKEY with your grepwords API key as well as adjust the KEYWORDLIMIT to the optimize the amount fetch and loaded in GSC as they are done live
 
